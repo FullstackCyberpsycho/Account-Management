@@ -1,7 +1,7 @@
 package org.example.services;
 
 import org.example.dao.UsersAccDao;
-import org.example.model.Users;
+import org.example.model.User;
 import org.example.ui.Ui;
 
 import java.io.File;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class UsersService {
     private UsersAccDao usersAccDao;
     private String fileName = "src/main/resources/isAcc.txt";
-    private File x = new File(fileName);
+    private File isAcc = new File(fileName);
 
     public UsersService(UsersAccDao usersAccDao) {
         this.usersAccDao = usersAccDao;
@@ -25,29 +25,14 @@ public class UsersService {
 
     public void addUser(String login, String password) {
         String infoUser = login + "/" + password;
-        boolean isGo = false;
-        char isGo2;
-        if (usersAccDao.getLoginAndPassword().equals(infoUser)) {
-            isGo = true;
-        } else {
-            isGo = false;
-        }
-        if (!isGo) {
-            Users users = new Users(login, password);
+        if (!usersAccDao.getLoginAndPassword().equals(infoUser)) {
+            User users = new User(login, password);
             usersAccDao.addUser(users);
-            try(FileWriter fileWriter = new FileWriter(fileName)) {
-                fileWriter.write("1");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            new Ui();
+
+            System.out.println("Вы успешно зарегистрированы!");
+            new Ui().mainMenu();
         } else {
-            System.out.println("Ошибка Email");
-            try(FileWriter fileWriter = new FileWriter(fileName)) {
-                fileWriter.write("0");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            System.out.println("Ошибка: такой аккаунт уже существует");
         }
     }
 
@@ -56,13 +41,13 @@ public class UsersService {
         //System.out.println(infoUser + ", " + usersAccDao.getLoginAndPassword());
         Scanner sc = null;
         try {
-            sc = new Scanner(x);
+            sc = new Scanner(isAcc);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         if (usersAccDao.getLoginAndPassword().contains(infoUser)) {
-            try(FileWriter fileWriter = new FileWriter(x)) {
-                fileWriter.write("1");
+            try(FileWriter fileWriter = new FileWriter(isAcc)) {
+                fileWriter.write(login);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -71,17 +56,25 @@ public class UsersService {
             while (sc.hasNext()) {
                 s = sc.nextLine();
             }
-            if (s.equals("1")) {
+            if (s.equals(login)) {
                 new Ui();
             }
         } else {
             System.out.println("не ок");
-            try(FileWriter fileWriter = new FileWriter(x)) {
+            try(FileWriter fileWriter = new FileWriter(isAcc)) {
                 fileWriter.write("0");
                 fileWriter.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public int getId(String login) {
+        return usersAccDao.getId(login);
+    }
+
+    public ArrayList<String> getLogin() {
+        return usersAccDao.getUserLogin();
     }
 }

@@ -1,9 +1,8 @@
 package org.example.model;
 
 public class Account {
-    private String nameAcc, nameProfilAcc, email, password;
     private int id;
-    private String nameService, login;
+    private String nameService, login, password;
 
     public int getId() {
         return id;
