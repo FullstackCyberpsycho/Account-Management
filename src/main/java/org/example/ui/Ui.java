@@ -2,6 +2,7 @@ package org.example.ui;
 
 import org.example.dao.AccountDao;
 import org.example.dao.UsersAccDao;
+import org.example.model.MenuOption;
 import org.example.model.Register;
 import org.example.services.AccountService;
 import org.example.services.UsersService;
@@ -49,28 +50,27 @@ public class Ui {
                     "Ввод: ");
             choise = in.nextLine();
 
-            switch (choise) {
-                case "1":
-                    printListAcc();
-                    break;
-                case "2":
-                    ptintAddAcc();
-                    break;
-                case "3":
-                    printChangeAcc();
-                    break;
-                case "4":
-                    printDeleteAcc();
-                    break;
-                case "5":
-                    System.out.println("Вы вышли");
-                    break;
-                default:
-                    System.out.println("Ошибка!");
-                    break;
-            }
-            if (choise.equals("6")) {
-                break;
+            MenuOption option = MenuOption.fromCode(choise);
+            if (option == null) {
+                System.out.println("Ошибка ввода");
+            } else {
+                switch (option) {
+                    case LIST_ACCOUNTS:
+                        printListAcc();
+                        break;
+                    case ADD_ACCOUNTS:
+                        ptintAddAcc();
+                        break;
+                    case CHANGE_PASSWORD:
+                        printChangeAcc();
+                        break;
+                    case DELETE_ACCOUNT:
+                        printDeleteAcc();
+                        break;
+                    case EXIT:
+                        System.out.println("Вы вышли");
+                        break;
+                }
             }
         }
     }
