@@ -51,12 +51,16 @@ public class AccountDao {
         }
     }
 
-    public void updatePasswordAccount(int id, String newPassword) {
-        String sql = "UPDATE accounts SET password = ? WHERE id = ?;";
+    public void updatePasswordAccount(int id, int userId, String newPassword) {
+        String sql = "UPDATE accounts " +
+                "SET password = ? " +
+                "WHERE id = ? AND user_id = ?;";
+
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, newPassword);
             pstmt.setInt(2, id);
+            pstmt.setInt(3, userId);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -64,13 +68,15 @@ public class AccountDao {
         }
     }
 
-    public void deleteAccount(int id) {
-        String sql = "DELETE FROM accounts WHERE id = ?;";
+    public void deleteAccount(int userId,  int id) {
+        String sql = "DELETE FROM accounts " +
+                "WHERE user_id = ? AND id = ?;";
 
         try (Connection conn = getConnection()) {
             conn.setAutoCommit(false);
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setInt(1, id);
+                pstmt.setInt(1, userId);
+                pstmt.setInt(2, id);
 
                 pstmt.executeUpdate();
                 conn.commit();
@@ -82,7 +88,6 @@ public class AccountDao {
             e.printStackTrace();
         }
     }
-
 
     public void deleteAllAccount(int userId) {
         String sql = "DELETE FROM accounts " +

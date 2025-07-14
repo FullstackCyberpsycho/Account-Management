@@ -142,8 +142,12 @@ public class Ui {
         Scanner scanner = new Scanner(System.in);
         String newPassword = scanner.nextLine();
 
-        accountService.updatePasswordAccount(id, newPassword);
-        System.out.println("пароль аккаунта изменен");
+        if (userId != -1) {
+            accountService.updatePasswordAccount(id, userId, newPassword);
+            System.out.println("пароль аккаунта изменен");
+        } else {
+            System.out.println("Ошибка id");
+        }
     }
 
     private void printDeleteAcc() {
@@ -156,11 +160,11 @@ public class Ui {
             case "1":
                 if (userId != -1) {
                     accountService.deleteAllAccount(userId);
+                    System.out.println("Аккаунты были удалены");
                 } else {
                     System.out.println("Ошибка id");
                 }
 
-                System.out.println("Аккаунты были удалены");
                 break;
             case "2":
                 if (userId != -1) {
@@ -172,8 +176,13 @@ public class Ui {
                 System.out.print("Введите id сервиса который хотите удалить: ");
                 int id = in.nextInt();
 
+                if (userId != -1) {
+                    accountService.deleteAccount(userId,id);
+                    System.out.println("Аккаунты были удалены");
+                } else {
+                    System.out.println("Ошибка id");
+                }
                 System.out.println("Аккаунт быд удален");
-                accountService.deleteAccount(id);
                 break;
         }
     }

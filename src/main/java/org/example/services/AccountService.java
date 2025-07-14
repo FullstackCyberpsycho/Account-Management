@@ -36,15 +36,15 @@ public class AccountService {
         System.out.println(nameService + " был Добавлен");
     }
 
-    public void deleteAccount(int id) {
-        accountDao.deleteAccount(id);
+    public void deleteAccount(int userId ,int id) {
+        accountDao.deleteAccount(userId, id);
     }
 
     public void deleteAllAccount(int userId) {
         accountDao.deleteAllAccount(userId);
     }
 
-    public void updatePasswordAccount(int id, String newPassword) {
-        accountDao.updatePasswordAccount(id, newPassword);
+    public void updatePasswordAccount(int id, int userId, String newPassword) {
+        accountDao.updatePasswordAccount(id, userId, newPassword);
     }
 }
