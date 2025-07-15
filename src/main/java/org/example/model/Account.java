@@ -1,14 +1,7 @@
 package org.example.model;
 
 public class Account {
-    private int id;
     private String nameService, login, password;
-
-    public int getId() {
-        return id;
-    }
-
-    public Account(){};
 
     public Account(String nameService, String login, String password) {
         this.nameService = nameService;

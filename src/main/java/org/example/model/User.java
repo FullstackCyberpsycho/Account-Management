@@ -1,24 +1,17 @@
 package org.example.model;
 
 import org.example.dao.UsersAccDao;
-import org.example.services.UsersService;
-
+import org.example.services.UsersServiceImpl;
 
 public class User {
     private String login, password;
     private int id;
-    private UsersService usersService = new UsersService(new UsersAccDao());
+    private UsersServiceImpl usersService = new UsersServiceImpl(new UsersAccDao());
 
     public User(String login, String password) {
         this.login = login;
         this.password = password;
     }
-
-    public User(String login) {
-        this.login = login;
-    };
-
-    public User(){};
 
     public String getPassword() {
         return password;

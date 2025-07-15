@@ -4,37 +4,49 @@ import org.example.dao.AccountDao;
 import org.example.dao.UsersAccDao;
 import org.example.model.MenuOption;
 import org.example.model.Register;
-import org.example.services.AccountService;
-import org.example.services.UsersService;
+import org.example.model.UserNotFoundException;
+import org.example.services.AccountServiceImpl;
+import org.example.services.UsersServiceImpl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Ui {
     private Scanner in = new Scanner(System.in);
     private String choise, login;
-    private AccountService accountService = new AccountService(new AccountDao());
-    private UsersService usersService = new UsersService(new UsersAccDao());
+    private AccountServiceImpl accountService = new AccountServiceImpl(new AccountDao());
+    private UsersServiceImpl usersService = new UsersServiceImpl(new UsersAccDao());
     private int userId;
+    private String fileName = "src/main/resources/AutoEntrance.txt";
+    Path path = Path.of(fileName);
 
     public void run() {
-        System.out.print("Введите ваш логин для входа в аккаунт или введите 1 для регистрации аккаунта\n" +
-                "Ввод: ");
-        login = in.nextLine();
-        if (usersService.getLogin().contains(login)) {
-            userId = usersService.getId(login);
-            mainMenu();
-        } else if (login.equals("1")) {
-            new Register();
-        } else if (!usersService.getLogin().contains(login)) {
-            System.out.print("Такого логина не существует!\n" +
-                    "1. Зарегистрироваться\n" +
+        try {
+            System.out.print("Введите ваш логин для входа в аккаунт или введите 1 для регистрации аккаунта\n" +
+                    "Ввод: ");
+            login = in.nextLine();
+            if (login.equals("1")) {
+                new Register();
+            }
+
+            if (usersService.getLogin().contains(login)) {
+                userId = usersService.getId(login);
+                mainMenu();
+            } else {
+                throw new UserNotFoundException(login);
+            }
+        } catch (UserNotFoundException e) {
+            System.out.println(e.getMessage());
+            System.out.print("1. Зарегистрироваться\n" +
                     "2. Выход\n" +
                     "Ввод: ");
             choise = in.nextLine();
             if (choise.equals("1")) {
                 new Register();
             } else if (choise.equals("2")) {
-                return;
+                System.exit(0);
             }
         }
     }
@@ -86,20 +98,11 @@ public class Ui {
         System.out.print("Пароль: ");
         String password = sc.nextLine();
 
-        if (userId != -1) {
-            accountService.addAccount(nameService, login, password, userId);
-        } else {
-            System.out.println("Ошибка: пользователь не найден.");
-        }
+        accountService.addAccount(nameService, login, password, userId);
     }
 
     private void printListAcc() {
-
-        if (userId != -1) {
-            accountService.printInfo(userId);
-        } else {
-            System.out.println("Ошибка id");
-        }
+        accountService.printInfo(userId);
 
         System.out.print("1. Отсортировать по названию сервиса\n" +
                 "Ввод: ");
@@ -111,17 +114,9 @@ public class Ui {
                         "Ввод: ");
                 choise = in.nextLine();
                 if (choise.equals("1")) {
-                    if (userId != -1) {
-                        accountService.printSortASCName(userId);
-                    } else {
-                        System.out.println("Ошибка id");
-                    }
+                    accountService.printSortASCName(userId);
                 } else if (choise.equals("2")) {
-                    if (userId != -1) {
-                        accountService.printSortDESCName(userId);
-                    } else {
-                        System.out.println("Ошибка id");
-                    }
+                    accountService.printSortDESCName(userId);
                 }
                 System.out.print("'Enter'. продолжить: ");
                 choise = in.nextLine();
@@ -130,11 +125,7 @@ public class Ui {
     }
 
     private void printChangeAcc() {
-        if (userId != -1) {
-            accountService.printAllInfo(userId);
-        } else {
-            System.out.println("Ошибка id");
-        }
+        accountService.printAllInfo(userId);
 
         System.out.print("Введите id сервиса пароль которого хотите изменить: ");
         int id = in.nextInt();
@@ -142,12 +133,8 @@ public class Ui {
         Scanner scanner = new Scanner(System.in);
         String newPassword = scanner.nextLine();
 
-        if (userId != -1) {
-            accountService.updatePasswordAccount(id, userId, newPassword);
-            System.out.println("пароль аккаунта изменен");
-        } else {
-            System.out.println("Ошибка id");
-        }
+        accountService.updatePasswordAccount(id, userId, newPassword);
+        System.out.println("пароль аккаунта изменен");
     }
 
     private void printDeleteAcc() {
@@ -158,30 +145,15 @@ public class Ui {
 
         switch (choise) {
             case "1":
-                if (userId != -1) {
-                    accountService.deleteAllAccount(userId);
-                    System.out.println("Аккаунты были удалены");
-                } else {
-                    System.out.println("Ошибка id");
-                }
-
+                accountService.deleteAllAccount(userId);
+                System.out.println("Аккаунты были удалены");
                 break;
             case "2":
-                if (userId != -1) {
-                    accountService.printAllInfo(userId);
-                } else {
-                    System.out.println("Ошибка id");
-                }
-
+                accountService.printAllInfo(userId);
                 System.out.print("Введите id сервиса который хотите удалить: ");
-                int id = in.nextInt();
 
-                if (userId != -1) {
-                    accountService.deleteAccount(userId,id);
-                    System.out.println("Аккаунты были удалены");
-                } else {
-                    System.out.println("Ошибка id");
-                }
+                int id = in.nextInt();
+                accountService.deleteAccount(userId,id);
                 System.out.println("Аккаунт быд удален");
                 break;
         }

@@ -1,9 +1,7 @@
 package org.example.services;
 
 import org.example.dao.AccountDao;
-import org.example.model.Account;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -11,7 +9,6 @@ import org.mockito.MockitoAnnotations;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class AccountServicesTest {
 
@@ -19,7 +16,7 @@ public class AccountServicesTest {
     private AccountDao accountDao;
 
     @InjectMocks
-    private AccountService accountService;
+    private AccountServiceImpl accountService;
 
     @BeforeEach
     void setUp() {
