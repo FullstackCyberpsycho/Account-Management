@@ -1,9 +1,15 @@
 package org.example.services;
 
-import java.util.ArrayList;
+import org.example.ui.Ui;
+
+import java.util.List;
 
 public interface UsersService {
     void addUser(String login, String password);
     int getId(String login);
-    ArrayList<String> getLogin();
+    List<String> getLogin();
+
+    /*default void mainMenu() {
+        new Ui().mainMenu();
+    }*/
 }

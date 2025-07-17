@@ -12,30 +12,56 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class Ui {
     private Scanner in = new Scanner(System.in);
     private String choise, login;
     private AccountServiceImpl accountService = new AccountServiceImpl(new AccountDao());
     private UsersServiceImpl usersService = new UsersServiceImpl(new UsersAccDao());
+    private Register register = new Register(usersService);
     private int userId;
-    private String fileName = "src/main/resources/AutoEntrance.txt";
-    Path path = Path.of(fileName);
+    private static Ui ui;
+
+    private Ui() {}
+
+     public static Ui getUi() {
+        if (ui == null) {
+            ui = new Ui();
+        }
+        return ui;
+    }
 
     public void run() {
+        String fileName = "src/main/resources/autoEntrance.txt";
+        Path path = Path.of(fileName);
+        String isAcc;
+
         try {
-            System.out.print("Введите ваш логин для входа в аккаунт или введите 1 для регистрации аккаунта\n" +
-                    "Ввод: ");
-            login = in.nextLine();
-            if (login.equals("1")) {
-                new Register();
+            try (Stream<String> stream = Files.lines(path)) {
+                isAcc = stream.findFirst().orElse("");
+            }
+            try (Stream<String> stream = Files.lines(path)) {
+                login = stream.skip(1).findFirst().orElse("");
             }
 
-            if (usersService.getLogin().contains(login)) {
+            if (isAcc.equals("1")) {
                 userId = usersService.getId(login);
                 mainMenu();
             } else {
-                throw new UserNotFoundException(login);
+                System.out.print("Введите ваш логин для входа в аккаунт или введите 1 для регистрации аккаунта\n" +
+                    "Ввод: ");
+                login = in.nextLine();
+                if (login.equals("1")) {
+                    register.regAccount();
+                }
+
+                if (usersService.getLogin().contains(login)) {
+                    userId = usersService.getId(login);
+                    mainMenu();
+                } else {
+                    throw new UserNotFoundException(login);
+                }
             }
         } catch (UserNotFoundException e) {
             System.out.println(e.getMessage());
@@ -44,10 +70,12 @@ public class Ui {
                     "Ввод: ");
             choise = in.nextLine();
             if (choise.equals("1")) {
-                new Register();
+                register.regAccount();
             } else if (choise.equals("2")) {
                 System.exit(0);
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 

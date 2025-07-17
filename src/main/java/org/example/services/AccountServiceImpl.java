@@ -4,7 +4,7 @@ import org.example.dao.AccountDao;
 import org.example.dao.UsersAccDao;
 import org.example.model.Account;
 
-public class AccountServiceImpl implements AccountService{
+public class AccountServiceImpl implements AccountService {
     private AccountDao accountDao;
 
     public AccountServiceImpl(AccountDao accountDao) {
