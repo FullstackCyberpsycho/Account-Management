@@ -3,6 +3,7 @@ package org.example.services;
 import org.example.dao.AccountDao;
 import org.example.dao.UsersAccDao;
 import org.example.model.Account;
+import org.example.model.AutoLogin;
 
 public class AccountServiceImpl implements AccountService {
     private AccountDao accountDao;
@@ -29,7 +30,7 @@ public class AccountServiceImpl implements AccountService {
 
     public void addAccount(String nameService, String login, String password, int userId) {
         Account account = new Account(nameService, login, password);
-        UsersServiceImpl usersService = new UsersServiceImpl(new UsersAccDao());
+        UsersServiceImpl usersService = new UsersServiceImpl(new UsersAccDao(), new AutoLogin());
 
         accountDao.addAccount(account, userId);
         System.out.println(nameService + " был Добавлен");

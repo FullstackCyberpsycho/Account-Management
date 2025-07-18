@@ -6,7 +6,7 @@ import org.example.services.UsersServiceImpl;
 public class User {
     private String login, password;
     private int id;
-    private UsersServiceImpl usersService = new UsersServiceImpl(new UsersAccDao());
+    private UsersServiceImpl usersService = new UsersServiceImpl(new UsersAccDao(), new AutoLogin());
 
     public User(String login, String password) {
         this.login = login;

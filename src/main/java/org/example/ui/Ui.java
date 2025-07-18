@@ -2,9 +2,7 @@ package org.example.ui;
 
 import org.example.dao.AccountDao;
 import org.example.dao.UsersAccDao;
-import org.example.model.MenuOption;
-import org.example.model.Register;
-import org.example.model.UserNotFoundException;
+import org.example.model.*;
 import org.example.services.AccountServiceImpl;
 import org.example.services.UsersServiceImpl;
 
@@ -18,7 +16,7 @@ public class Ui {
     private Scanner in = new Scanner(System.in);
     private String choise, login;
     private AccountServiceImpl accountService = new AccountServiceImpl(new AccountDao());
-    private UsersServiceImpl usersService = new UsersServiceImpl(new UsersAccDao());
+    private UsersServiceImpl usersService = new UsersServiceImpl(new UsersAccDao(), new AutoLogin());
     private Register register = new Register(usersService);
     private int userId;
     private static Ui ui;
@@ -49,18 +47,27 @@ public class Ui {
                 userId = usersService.getId(login);
                 mainMenu();
             } else {
-                System.out.print("Введите ваш логин для входа в аккаунт или введите 1 для регистрации аккаунта\n" +
-                    "Ввод: ");
-                login = in.nextLine();
-                if (login.equals("1")) {
-                    register.regAccount();
-                }
+                System.out.print("1. Войти в аккаунт\n" +
+                        "2. Зарегистрироватся\n" +
+                        "3. Выход из приложения\n" +
+                        "Ввод: ");
+                choise = in.nextLine();
+                if (choise.equals("1")) {
+                    System.out.print("Введите ваш логин: ");
+                    login = in.nextLine();
 
-                if (usersService.getLogin().contains(login)) {
-                    userId = usersService.getId(login);
-                    mainMenu();
-                } else {
-                    throw new UserNotFoundException(login);
+                    new AutoLogin().run(login);
+
+                    if (usersService.getLogin().contains(login)) {
+                        userId = usersService.getId(login);
+                        mainMenu();
+                    } else {
+                        throw new UserNotFoundException(login);
+                    }
+                } else if (choise.equals("2")) {
+                    register.regAccount();
+                } else if (choise.equals("3")) {
+                    System.exit(0);
                 }
             }
         } catch (UserNotFoundException e) {
@@ -82,11 +89,12 @@ public class Ui {
     public void mainMenu() {
         while (true) {
             System.out.print("=== Account Management ===\n" +
-                    "1. Список аккаунтов\n" +
-                    "2. Добавить аккаунт\n" +
-                    "3. Изменить пароль аккаунта\n" +
-                    "4. Удалить аккаунт\n" +
-                    "5. Выход из приложения\n"+
+                    "1. Профиль\n" +
+                    "2. Список аккаунтов\n" +
+                    "3. Добавить аккаунт\n" +
+                    "4. Изменить пароль аккаунта\n" +
+                    "5. Удалить аккаунт\n" +
+                    "6. Выход из приложения\n"+
                     "Ввод: ");
             choise = in.nextLine();
 
@@ -95,6 +103,9 @@ public class Ui {
                 System.out.println("Ошибка ввода");
             } else {
                 switch (option) {
+                    case RPOFILE:
+                        new ProfileUs(usersService, login).menu();
+                        break;
                     case LIST_ACCOUNTS:
                         printListAcc();
                         break;
@@ -109,6 +120,7 @@ public class Ui {
                         break;
                     case EXIT:
                         System.out.println("Вы вышли");
+                        System.exit(0);
                         break;
                 }
             }
@@ -146,7 +158,7 @@ public class Ui {
                 } else if (choise.equals("2")) {
                     accountService.printSortDESCName(userId);
                 }
-                System.out.print("'Enter'. продолжить: ");
+                System.out.print("'Enter' - продолжить: ");
                 choise = in.nextLine();
                 break;
         }

@@ -83,6 +83,26 @@ public class UsersAccDao {
         return 0;
     }
 
+    public void deleteUser(int userId) {
+        String sql = "DELETE FROM users " +
+                "WHERE id = ?;";
+
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, userId);
+
+                pstmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     protected Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, user, password);

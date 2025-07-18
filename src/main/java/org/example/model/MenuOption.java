@@ -1,11 +1,12 @@
 package org.example.model;
 
 public enum MenuOption {
-    LIST_ACCOUNTS("1"),
-    ADD_ACCOUNTS("2"),
-    CHANGE_PASSWORD("3"),
-    DELETE_ACCOUNT("4"),
-    EXIT("5");
+    RPOFILE("1"),
+    LIST_ACCOUNTS("2"),
+    ADD_ACCOUNTS("3"),
+    CHANGE_PASSWORD("4"),
+    DELETE_ACCOUNT("5"),
+    EXIT("6");
 
     private final String code;
 

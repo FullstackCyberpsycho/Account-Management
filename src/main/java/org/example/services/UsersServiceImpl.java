@@ -1,6 +1,7 @@
 package org.example.services;
 
 import org.example.dao.UsersAccDao;
+import org.example.model.AutoLogin;
 import org.example.model.User;
 import org.example.ui.Ui;
 
@@ -14,9 +15,11 @@ public class UsersServiceImpl implements UsersService {
     private UsersAccDao usersAccDao;
     private String fileName = "src/main/resources/autoEntrance.txt";
     private File autoEntrance = new File(fileName);
+    private AutoLogin autoLogin;
 
-    public UsersServiceImpl(UsersAccDao usersAccDao) {
+    public UsersServiceImpl(UsersAccDao usersAccDao, AutoLogin autoLogin) {
         this.usersAccDao = usersAccDao;
+        this.autoLogin = autoLogin;
     }
 
     public void addUser(String login, String password) {
@@ -27,7 +30,8 @@ public class UsersServiceImpl implements UsersService {
             User users = new User(login, password);
             usersAccDao.addUser(users);
 
-            System.out.print("1. Запомнить меня(автовход)\n" +
+            autoLogin.run(login);
+            /*System.out.print("1. Запомнить меня(автовход)\n" +
                     "2. 'Enter'. Продолжить\n" +
                     "Ввод: ");
             String ch = in.nextLine();
@@ -38,7 +42,7 @@ public class UsersServiceImpl implements UsersService {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-            }
+            }*/
 
             System.out.println("Вы успешно зарегистрированы!");
             Ui.getUi().mainMenu();
@@ -53,5 +57,9 @@ public class UsersServiceImpl implements UsersService {
 
     public List<String> getLogin() {
         return usersAccDao.getUserLogin();
+    }
+
+    public void deleteUser(int userId) {
+        usersAccDao.deleteUser(userId);
     }
 }
