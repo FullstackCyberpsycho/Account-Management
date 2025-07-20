@@ -6,6 +6,7 @@ import org.example.model.*;
 import org.example.services.AccountServiceImpl;
 import org.example.services.UsersServiceImpl;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,8 +33,10 @@ public class Ui {
 
     public void run() {
         String fileName = "src/main/resources/autoEntrance.txt";
+        String fileName2 = "src/main/resources/isRegAcc";
         Path path = Path.of(fileName);
-        String isAcc;
+        Path path2 = Path.of(fileName2);
+        String isAcc, isRerAcc;
 
         try {
             try (Stream<String> stream = Files.lines(path)) {
@@ -41,6 +44,9 @@ public class Ui {
             }
             try (Stream<String> stream = Files.lines(path)) {
                 login = stream.skip(1).findFirst().orElse("");
+            }
+            try (Stream<String> stream = Files.lines(path2)) {
+                isRerAcc = stream.findFirst().orElse("");
             }
 
             if (isAcc.equals("1")) {
@@ -56,16 +62,25 @@ public class Ui {
                     System.out.print("Введите ваш логин: ");
                     login = in.nextLine();
 
-                    new AutoLogin().run(login);
-
                     if (usersService.getLogin().contains(login)) {
+                        try(FileWriter fileWriter = new FileWriter(fileName2)) {
+                            fileWriter.write("1");
+                        } catch (IOException e) {
+                            throw new RuntimeException(e.getMessage());
+                        }
                         userId = usersService.getId(login);
+                        new AutoLogin().run(login);
                         mainMenu();
                     } else {
                         throw new UserNotFoundException(login);
                     }
                 } else if (choise.equals("2")) {
-                    register.regAccount();
+                    if (isRerAcc.equals("1")) {
+                        System.out.println("У вас уже есть аккаунт!");
+                        ui.run();
+                    } else {
+                        register.regAccount();
+                    }
                 } else if (choise.equals("3")) {
                     System.exit(0);
                 }

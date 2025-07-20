@@ -8,9 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+
 public class ProfileUs {
     private UsersServiceImpl usersService;
     private String login;
+    private String fileName = "src/main/resources/autoEntrance.txt";
+    private File autoEntrance = new File(fileName);
+
 
     public ProfileUs(UsersServiceImpl usersService, String login) {
         this.usersService = usersService;
@@ -21,22 +25,20 @@ public class ProfileUs {
         Scanner in = new Scanner(System.in);
 
         System.out.print("ваш логин: " + login + "\n" +
-                "1. Выйти из аккаунта\n" +
-                "2. Удалить аккаунт\n" +
+             //   "1. Выйти из аккаунта\n" +
+                "1. Удалить аккаунт\n" +
                 "'Enter' - Продолжить\n" +
                 "Ввод: ");
         String choise = in.nextLine();
         if (choise.equals("1")) {
-            exitFromAccount();
-        } else if (choise.equals("2")) {
+            //exitFromAccount();
             removingAccount();
-        }
+        } /*else if (choise.equals("2")) {
+            removingAccount();
+        }*/
     }
 
-    private void exitFromAccount() {
-        String fileName = "src/main/resources/autoEntrance.txt";
-        File autoEntrance = new File(fileName);
-
+    /*private void exitFromAccount() {
         try(FileWriter fileWriter = new FileWriter(autoEntrance)) {
             fileWriter.write("");
         } catch (IOException e) {
@@ -44,10 +46,15 @@ public class ProfileUs {
         }
         System.out.println("Вы вышли из своего аккаунта\n");
         Ui.getUi().run();
-    }
+    }*/
 
     private void removingAccount() {
         usersService.deleteUser(usersService.getId(login));
+        try(FileWriter fileWriter = new FileWriter(autoEntrance)) {
+            fileWriter.write("");
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
         System.out.println("Ваш аккаунт был удалён");
         Ui.getUi().run();
     }

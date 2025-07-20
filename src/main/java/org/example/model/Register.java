@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Register {
     private Scanner in = new Scanner(System.in);
-    private UsersServiceImpl usersService; ///= new UsersServiceImpl(new UsersAccDao());
+    private UsersServiceImpl usersService;
     private int userId;
 
     public Register(UsersServiceImpl usersService) {
