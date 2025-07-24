@@ -31,10 +31,9 @@ public class ProfileUs {
                 "Ввод: ");
         String choise = in.nextLine();
         if (choise.equals("1")) {
-            //exitFromAccount();
             removingAccount();
         } /*else if (choise.equals("2")) {
-            removingAccount();
+
         }*/
     }
 

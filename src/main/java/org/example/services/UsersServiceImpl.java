@@ -6,8 +6,6 @@ import org.example.model.User;
 import org.example.ui.Ui;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -29,23 +27,10 @@ public class UsersServiceImpl implements UsersService {
         if (!usersAccDao.getLoginAndPassword().equals(infoUser)) {
             User users = new User(login, password);
             usersAccDao.addUser(users);
-
             autoLogin.run(login);
-            /*System.out.print("1. Запомнить меня(автовход)\n" +
-                    "2. 'Enter'. Продолжить\n" +
-                    "Ввод: ");
-            String ch = in.nextLine();
-            if (ch.equals("1")) {
-                try(FileWriter fileWriter = new FileWriter(autoEntrance)) {
-                    fileWriter.write("1\n" + login);
-                    //fileWriter.write("1");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }*/
 
             System.out.println("Вы успешно зарегистрированы!");
-            Ui.getUi().mainMenu();
+            Ui.getUi().run();
         } else {
             System.out.println("Ошибка: такой аккаунт уже существует");
         }

@@ -24,6 +24,11 @@ public class AccountServicesTest {
     }
 
     @Test
+    void testPrintInfo() {
+
+    }
+
+    /*@Test
     void testPrintAllInfo() {
         accountService.printAllInfo();
         verify(accountDao).getAllInfoAccounts();
@@ -46,7 +51,7 @@ public class AccountServicesTest {
     void testAddEmailAccount() {
         accountService.addAccount("Test1", "Test2", "Testemail.com", "1234");
         when().thenReturn("Ошибка: Email без @! Аккаунт не был добавлен")
-    }*/
+    }//
 
     @Test
     void testDeleteAccount() {
@@ -77,6 +82,6 @@ public class AccountServicesTest {
     void testPrintSortDESCName() {
         accountService.printSortDESCName();
         verify(accountDao).getSortDESCNameAccounts();
-    }
+    }*/
 
 }

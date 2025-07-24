@@ -6,7 +6,6 @@ import org.example.model.*;
 import org.example.services.AccountServiceImpl;
 import org.example.services.UsersServiceImpl;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,6 +52,23 @@ public class Ui {
                 userId = usersService.getId(login);
                 mainMenu();
             } else {
+                if (isRerAcc.equals("1")) {
+                    System.out.print("1. Войти в аккаунт\n" +
+                            "2. Выход из приложения\n" +
+                            "Ввод: ");
+                    choise = in.nextLine();
+                    if (choise.equals("1")) {
+                        System.out.print("Введите ваш логин: ");
+                        login = in.nextLine();
+
+                        //userId = register.regAccount();
+
+                        //userId = usersService.getId(login);
+                        mainMenu();
+                    } else if (choise.equals("2")) {
+                        System.exit(0);
+                    }
+                }
                 System.out.print("1. Войти в аккаунт\n" +
                         "2. Зарегистрироватся\n" +
                         "3. Выход из приложения\n" +
@@ -62,25 +78,9 @@ public class Ui {
                     System.out.print("Введите ваш логин: ");
                     login = in.nextLine();
 
-                    if (usersService.getLogin().contains(login)) {
-                        try(FileWriter fileWriter = new FileWriter(fileName2)) {
-                            fileWriter.write("1");
-                        } catch (IOException e) {
-                            throw new RuntimeException(e.getMessage());
-                        }
-                        userId = usersService.getId(login);
-                        new AutoLogin().run(login);
-                        mainMenu();
-                    } else {
-                        throw new UserNotFoundException(login);
-                    }
+                    register.loginAccount(login, userId);
                 } else if (choise.equals("2")) {
-                    if (isRerAcc.equals("1")) {
-                        System.out.println("У вас уже есть аккаунт!");
-                        ui.run();
-                    } else {
-                        register.regAccount();
-                    }
+                    register.regAccount();
                 } else if (choise.equals("3")) {
                     System.exit(0);
                 }
@@ -143,6 +143,7 @@ public class Ui {
     }
 
     private void ptintAddAcc() {
+        //System.out.println("ddddddddddd: " + userId);
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Введите информацию о аккаунте:");

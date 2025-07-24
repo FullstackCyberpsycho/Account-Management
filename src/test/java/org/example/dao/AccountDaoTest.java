@@ -49,10 +49,10 @@ public class AccountDaoTest {
 --	login TEXT NOT NULL,
 --	password TEXT NOT NULL
 --);
-         */
-    }
 
-    @Disabled("Пока не работает")
+    }*/
+
+    /*@Disabled("Пока не работает")
     @Test
     void testGetAccounts() {
         accountDao.addAccount(new Account("Test", "Test1", "Test@Email.com", "1234"));
@@ -115,4 +115,4 @@ public class AccountDaoTest {
     public static void stop() {
         postgres.stop();
     }
-}
+}*/

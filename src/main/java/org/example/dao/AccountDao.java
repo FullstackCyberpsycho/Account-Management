@@ -32,8 +32,8 @@ public class AccountDao {
     } catch (SQLException e) {
         e.printStackTrace();
     }
-    return accounts;
-}
+        return accounts;
+    }
 
     public void addAccount(Account account, int userId) {
         String sql = "INSERT INTO accounts(user_id, name_service, login, password) " +
